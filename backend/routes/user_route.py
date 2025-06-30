@@ -1,7 +1,7 @@
 from flask_smorest import Blueprint
 from helper import save_to_db
 from models import UserModel
-from schemas import UserGetSchema, UserPostSchema, LoginResponseSchema
+from schemas import UserGetSchema, UserPostSchema, LoginResponseSchema, UserLoginSchema
 from flask.views import MethodView
 from models import UserModel
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -26,7 +26,7 @@ class Register(MethodView):
 @user_bp.route('/auth/login')
 class login (MethodView):
     
-    @user_bp.arguments(UserPostSchema)
+    @user_bp.arguments(UserLoginSchema)
     @user_bp.response(201, LoginResponseSchema)
     def post (self, data):
         email = data['email']

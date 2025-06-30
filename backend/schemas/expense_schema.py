@@ -13,4 +13,3 @@ class ExpensePostSchema(Schema):
     amount = fields.Float(required=True)
     category = fields.String(required=True)
     description = fields.String(required=True)
-    date = fields.DateTime(required=True)

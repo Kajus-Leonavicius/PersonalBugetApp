@@ -19,3 +19,7 @@ class UserPostSchema(Schema):
     password = fields.String(required= True)
     name = fields.String(required= True)
     surname = fields.String(required=True)
+
+class UserLoginSchema(Schema):
+    email = fields.String(required= True)
+    password = fields.String(required= True)
