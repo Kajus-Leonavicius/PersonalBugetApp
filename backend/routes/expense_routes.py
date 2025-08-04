@@ -1,6 +1,6 @@
 from flask_smorest import Blueprint, abort
 from models import ExpenseModel
-from schemas import ExpenseGetSchema, ExpensePostSchema
+from schemas import ExpenseGetSchema, ExpensePostSchema, ExpensesCategory
 from flask.views import MethodView
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from helper import save_to_db
@@ -67,3 +67,32 @@ class Expense(MethodView):
         db.session.delete(expense)
         db.session.commit()
         return expense
+
+@expense_bp.route('/expense_type/<string:expense_type>')
+class Classified(MethodView): 
+    
+    @expense_bp.doc(security=[{"bearerAuth": []}])
+    @jwt_required()
+    @expense_bp.response(200, ExpenseGetSchema(many=True))
+    def get (self, expense_type):
+        identity = get_jwt_identity()
+        
+        filtered = ExpenseModel.query.filter_by(user_id = identity, expenseType = expense_type).all()
+        
+        if not filtered: 
+            return 'no data'
+        else:
+            return filtered
+        
+@expense_bp.route('/categories')
+class Categories(MethodView): 
+    
+    @expense_bp.doc(security=[{"bearerAuth": []}])
+    @jwt_required()
+    @expense_bp.response(200, ExpensesCategory(many=True))
+    def get (self):
+        identity = get_jwt_identity()
+        
+        filtered = ExpenseModel.query.filter_by(user_id = identity).all()
+        
+        return filtered
